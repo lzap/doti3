@@ -1,0 +1,40 @@
+#!/bin/sh
+
+## Desktop background color
+xsetroot -solid '#101010' &
+
+## Set startup volume
+pactl set-sink-volume 0 '20%' &
+
+## Disable beeps
+xset -b &
+
+## Keybord layout setting
+setxkbmap -layout cz,us -option grp:shift_shift_toggle &
+
+## C-A-Backspace to kill X
+#setxkbmap -option terminate:ctrl_alt_bksp & 
+
+## Turns on the numlock key in X11
+#numlockx on &
+
+## DPMS monitor setting (standby -> suspend -> off) (seconds)
+xset dpms 300 600 900 &
+
+## Set LCD brightness
+xbacklight -set 90 &
+
+## Gamma correction through the X server
+#xgamma -gamma 1.1 &
+
+## Composite manager
+#xcompmgr -cf -r 0 -D 6 &
+
+## Clipboard manager
+LC_ALL=C parcellite &
+
+## OSD
+dunst &
+
+## Load "funny" sample
+pactl upload-sample ~/.i3/that_was_easy.wav that_was_easy &
