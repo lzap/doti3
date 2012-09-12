@@ -1,10 +1,37 @@
 #!/bin/sh
 
+###########################################################################
+# My auto start file for i3-wm, I execute it from i3 config with
+#   exec $HOME/bin/auto-start-for-i3
+#
+# For mouse moving I use xte. In Debian its in the package xautomation.
+###########################################################################
+
+# Wait for program coming up
+wait_for_program () {
+  n=0
+  while true
+  do
+    # PID of last background command
+    if xdotool search --onlyvisible --pid $!; then
+      break
+    else
+      if [ $n -eq 40 ]; then
+        notify-send -u critical "Error during start"
+        break
+      else
+        n=`expr $n + 1`
+        sleep 0.5
+      fi
+    fi
+  done
+}
+
 ## Desktop background color
 xsetroot -solid '#101010' &
 
 ## Set startup volume
-pactl set-sink-volume 0 '20%' &
+pactl set-sink-volume 0 '30%' &
 
 ## Disable beeps
 xset -b &
@@ -22,7 +49,7 @@ setxkbmap -layout cz,us -option grp:shift_shift_toggle &
 xset dpms 300 600 900 &
 
 ## Set LCD brightness
-xbacklight -set 90 &
+xbacklight -set 100 &
 
 ## Gamma correction through the X server
 #xgamma -gamma 1.1 &
@@ -36,5 +63,67 @@ LC_ALL=C parcellite &
 ## OSD
 dunst &
 
+## Mail checker
+dunst-checkmail -p ~/Mail/INBOX/cur/ -s 150 &
+
 ## Load "funny" sample
 pactl upload-sample ~/.i3/that_was_easy.wav that_was_easy &
+
+## apps with defined workspaces
+xchat &
+rednotebook &
+decibel-audio-player &
+lexicon &
+
+PANEL_CONNECTED=0; xrandr | grep -q "DP1 connected" && PANEL_CONNECTED=1
+
+## Working shells on workspace 1
+i3-msg workspace 1
+i3-msg split h
+urxvt -name "shell_a1" &
+wait_for_program
+gvim --servername vva
+wait_for_program
+i3-msg mode normal
+i3-msg split v
+i3-msg focus left
+i3-msg split v
+
+## Working shells on workspaces 2 and 3
+for w in 2 3; do
+  i3-msg workspace $w
+  i3-msg split h
+  urxvt -name "shell_a$w" &
+  wait_for_program
+  urxvt -name "shell_b$w" &
+  wait_for_program
+  i3-msg split v
+  if [ $PANEL_CONNECTED -eq 1 ]; then
+    # extra vertical shell only on panel
+    urxvt -name "shell_c$w" &
+    wait_for_program
+  fi
+  i3-msg focus left
+  i3-msg split v
+done
+
+## Web and mail
+i3-msg workspace 4
+i3-msg split h
+urxvt -name mail -e bash -c "mutt" &
+wait_for_program
+if [ $PANEL_CONNECTED -eq 0 ]; then
+  # browser is on separate workspace without panel
+  i3-msg workspace 3
+fi
+google-chrome &
+wait_for_program
+if [ $PANEL_CONNECTED -eq 1 ]; then
+  # resize only when started on the same workspace
+  i3-msg resize grow width 10 px
+fi
+i3-msg split v
+
+## Refresh and GO!
+xrefresh &
+exit 0

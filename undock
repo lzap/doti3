@@ -1,6 +1,2 @@
 #!/bin/bash
-
-i3-msg workspace 1 output LVDS1
-i3-msg workspace 2 output LVDS1
-i3-msg workspace 3 output LVDS1
-i3-msg workspace 4 output LVDS1
+xrandr --output DP1 --off

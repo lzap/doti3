@@ -1,6 +1,6 @@
 #!/bin/bash
-
-i3-msg workspace 1 output HDMI1
-i3-msg workspace 2 output HDMI1
-i3-msg workspace 3 output HDMI1
-i3-msg workspace 4 output HDMI1
+xrandr --output DP1 --on
+#i3-msg move workspace 1 output DP1
+#i3-msg move workspace 2 output DP1
+#i3-msg move workspace 3 output DP1
+#i3-msg move workspace 4 output DP1
