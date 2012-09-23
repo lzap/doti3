@@ -208,11 +208,15 @@ for_window [title="Lingea Lexicon 5$"] border none
 for_window [class="^GVim$"] split v, layout stacking
 for_window [class="^Xsane$"] floating enable
 for_window [class="^TeamViewer.exe$"] floating enable
+for_window [title="^TeamViewer$"] floating enable
+for_window [title="- TeamViewer -"] floating enable
+for_window [title="^Počítače a kontakty$"] floating enable
 
 # get elluminate working
 for_window [title="^Elluminate Live!"] floating enable
 for_window [title="^Application Sharing"] floating enable
 for_window [class="^net-sourceforge-jnlp-runtime-Boot$" title="^Downloading"] floating enable
+for_window [title="^Java$"] floating enable
 
 # create scratchpad shell
 exec urxvt -name scratchpad -e bash
