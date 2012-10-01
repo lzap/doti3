@@ -75,10 +75,10 @@ PANEL_CONNECTED=0; xrandr | grep -qE "(DP1|VGA1) connected" && PANEL_CONNECTED=1
 
 if [ grep -qE "VGA1 connected" ]; then
   # my configuration is for DP1 (move workspaces explicitly)
-  i3-msg move workspace 1 output VGA1
-  i3-msg move workspace 2 output VGA1
-  i3-msg move workspace 3 output VGA1
-  i3-msg move workspace 4 output VGA1
+  i3-msg move workspace 1 to output VGA1
+  i3-msg move workspace 2 to output VGA1
+  i3-msg move workspace 3 to output VGA1
+  i3-msg move workspace 4 to output VGA1
 fi
 
 ## Working shells on workspace 1

@@ -1,2 +1,0 @@
-#!/bin/bash
-xrandr --output DP1 --off

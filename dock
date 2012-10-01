@@ -1,6 +1,6 @@
 #!/bin/bash
-xrandr --output DP1 --on
-#i3-msg move workspace 1 output DP1
-#i3-msg move workspace 2 output DP1
-#i3-msg move workspace 3 output DP1
-#i3-msg move workspace 4 output DP1
+#xrandr --output DP1 --on
+i3-msg "workspace 1; move workspace to output right"
+i3-msg "workspace 2; move workspace to output right"
+i3-msg "workspace 3; move workspace to output right"
+i3-msg "workspace 4; move workspace to output right"
