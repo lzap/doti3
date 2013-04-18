@@ -42,11 +42,10 @@ bindsym Control+Mod1+l exec i3-msg workspace 1 && i3lock -c 111111 -d
 bindsym Control+Mod1+s exec sleep 5 && xset dpms force standby
 
 # change focus
-bindsym $mod+j focus left
-bindsym $mod+k focus down
-bindsym $mod+l focus up
-#bindsym $mod+semicolon focus right
-bindsym $mod+uring focus right
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
@@ -55,11 +54,10 @@ bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
 # move focused window
-bindsym $mod+Shift+J move left
-bindsym $mod+Shift+K move down
-bindsym $mod+Shift+L move up
-#bindsym $mod+Shift+colon move right
-bindsym $mod+Shift+quotedbl move right
+bindsym $mod+Shift+H move left
+bindsym $mod+Shift+J move down
+bindsym $mod+Shift+K move up
+bindsym $mod+Shift+L move right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Shift+Left move left
@@ -67,11 +65,8 @@ bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
-# split in horizontal orientation
-bindsym $mod+h split h
-
-# split in vertical orientation
-bindsym $mod+v split v
+# split orientation
+bindsym $mod+v layout toggle split
 
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen
@@ -195,9 +190,9 @@ bindsym XF86MonBrightnessUp exec /usr/bin/xbacklight -inc 10
 bindsym XF86MonBrightnessDown exec /usr/bin/xbacklight -dec 5
 
 # bindings for MS Natural Ergonomic Keyboard 4000
-bindsym XF86HomePage exec /usr/bin/xdg-open "http://www.github.com"
-bindsym XF86Search exec /usr/bin/xdg-open "http://www.google.com"
-bindsym XF86Mail exec /usr/bin/xdg-email
+bindsym XF86HomePage exec /usr/bin/xdg-open "http://www.github.com"; workspace 5
+bindsym XF86Search exec /usr/bin/xdg-open "http://www.google.com"; workspace 5
+bindsym XF86Mail exec /usr/bin/xdg-email; workspace 5
 #bindsym XF86Launch5
 #bindsym XF86Launch6
 #bindsym XF86Launch7
