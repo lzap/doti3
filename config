@@ -3,8 +3,16 @@
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 #
 # To give a presentation do:
+# xrandr (and determine active outputs and resolutions)
+#
+# xrandr --output LVDS1 --mode 1024x768 --output DP1 --mode 1280x720 --same-as LVDS1
 # xrandr --output VGA1 --mode 1024x768 --same-as LVDS1
+#
+# If you dont want clone then:
 # xrandr --output VGA1 --mode 1024x768 --right-of LVDS1
+#
+# To switch back:
+# xrandr --output VGA1 --right-of LVDS1 --auto
 
 set $mod Mod4
 
@@ -16,13 +24,13 @@ font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Return exec urxvt256c
 
 # kill focused window
 bindsym $mod+Shift+Q kill
 
 # start dmenu (a program launcher)
-bindsym $mod+space exec dmenu_run
+bindsym $mod+space exec /home/lzap/bin/dmenu_run
 
 # reload/restart/exit
 bindsym $mod+Shift+C reload
@@ -31,6 +39,7 @@ bindsym $mod+Shift+E exit
 
 # screen locker (first move to "safe" workspace without any chat app)
 bindsym Control+Mod1+l exec i3-msg workspace 1 && i3lock -c 111111 -d
+bindsym Control+Mod1+s exec sleep 5 && xset dpms force standby
 
 # change focus
 bindsym $mod+j focus left
@@ -111,15 +120,29 @@ bindsym $mod+8 workspace 8
 bindsym $mod+9 workspace 9
 bindsym $mod+0 workspace 10
 
-# switch to workspace (f1-f4)
-bindsym F1 workspace 1
-bindsym F2 workspace 2
-bindsym F3 workspace 3
-bindsym F4 workspace 4
-bindsym Mod1+F1 workspace 5
-bindsym Mod1+F2 workspace 6
-bindsym Mod1+F3 workspace 7
-bindsym Mod1+F4 workspace 8
+# switch to workspace mapping
+#bindsym F1 workspace 1
+#bindsym F2 workspace 2
+#bindsym F3 workspace 3
+#bindsym F4 workspace 4
+#bindsym F5 workspace 5
+#bindsym Mod1+F1 workspace 6
+#bindsym Mod1+F2 workspace 7
+#bindsym Mod1+F3 workspace 8
+#bindsym Mod1+F4 workspace 9
+#bindsym Mod1+F5 workspace 10
+
+# my launch keys and function keys are swapped with xmodmap
+bindsym XF86Launch5 workspace 1
+bindsym XF86Launch6 workspace 2
+bindsym XF86Launch7 workspace 3
+bindsym XF86Launch8 workspace 4
+bindsym XF86Launch9 workspace 5
+bindsym Mod1+XF86Launch5 workspace 6
+bindsym Mod1+XF86Launch6 workspace 7
+bindsym Mod1+XF86Launch7 workspace 8
+bindsym Mod1+XF86Launch8 workspace 9
+bindsym Mod1+XF86Launch9 workspace 10
 
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace 1
@@ -163,13 +186,41 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-# pulse audio volume control
-bindsym XF86AudioLowerVolume exec /usr/bin/pactl set-sink-volume 0 -- '-5%'
-bindsym XF86AudioRaiseVolume exec /usr/bin/pactl set-sink-volume 0 -- '+5%'
-bindsym XF86AudioMute exec /usr/bin/pactl set-sink-volume 0 0
+# bindings for ThinkPad keyboard
+bindsym XF86AudioLowerVolume exec /usr/bin/pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo -- '-10%'
+bindsym XF86AudioRaiseVolume exec /usr/bin/pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo -- '+10%'
+bindsym XF86AudioMute exec /usr/bin/pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo 0
 bindsym XF86Launch1 exec /usr/bin/pactl play-sample that_was_easy
 bindsym XF86MonBrightnessUp exec /usr/bin/xbacklight -inc 10
 bindsym XF86MonBrightnessDown exec /usr/bin/xbacklight -dec 5
+
+# bindings for MS Natural Ergonomic Keyboard 4000
+bindsym XF86HomePage exec /usr/bin/xdg-open "http://www.github.com"
+bindsym XF86Search exec /usr/bin/xdg-open "http://www.google.com"
+bindsym XF86Mail exec /usr/bin/xdg-email
+#bindsym XF86Launch5
+#bindsym XF86Launch6
+#bindsym XF86Launch7
+#bindsym XF86Launch8
+#bindsym XF86Launch9
+#bindsym XF86AudioMute
+#bindsym XF86AudioLowerVolume
+#bindsym XF86AudioRaiseVolume
+#bindsym XF86AudioPlay
+bindsym XF86Calculator exec /usr/bin/xcalc
+bindsym XF86Favourites exec urxvt256c
+# FLock keys
+#bindsym Help
+#bindsym Undo
+#bindsym Redo
+#bindsym XF86New
+#bindsym SunOpen
+#bindsym XF86Close
+#bindsym XF86Reply
+#bindsym XF86MailForward
+#bindsym XF86Send
+#bindsym XF86Save
+#bindsym Print
 
 # $mod+n reserved for close all notifications
 # see ~/.config/dunst/dunstrc for more
@@ -188,20 +239,25 @@ workspace 1 output DP1
 workspace 2 output DP1
 workspace 3 output DP1
 workspace 4 output DP1
-workspace 5 output LVDS1
+workspace 5 output DP1
 workspace 6 output LVDS1
 workspace 7 output LVDS1
 workspace 8 output LVDS1
+workspace 9 output LVDS1
+workspace 10 output LVDS1
 
 # workspace assignment (use "xprop")
-#assign [class="^Google-chrome$"] 3
+assign [class="^Google-chrome$"] 5
 #assign [class="^URxvt$" instance="^mail$"] 4
-assign [class="^Xchat$"] 5
-assign [class="^Rednotebook$"] 6
-assign [class="^Decibel-audio-player.py$"] 7
-assign [title="Lingea Lexicon 5$"] 8
+assign [class="^Xchat$"] 6
+assign [class="^Steam$"] 7
+assign [class="^Vide$"] 8
+#assign [class="^Decibel-audio-player.py$"] 7
+assign [class="^Rednotebook$"] 9
+assign [title="Lingea Lexicon 5$"] 10
 
 # custom window settings
+for_window [class="^XCalc$"] floating enable
 for_window [class="^URxvt$" instance="scratchpad"] border 1pixel; move scratchpad
 for_window [class="^Google-chrome$"] border none
 for_window [title="Lingea Lexicon 5$"] border none
@@ -211,6 +267,12 @@ for_window [class="^TeamViewer.exe$"] floating enable
 for_window [title="^TeamViewer$"] floating enable
 for_window [title="- TeamViewer -"] floating enable
 for_window [title="^Počítače a kontakty$"] floating enable
+for_window [class="^Steam$"] floating enable; border none
+for_window [class="^feh$"] fullscreen
+for_window [class="^Meld$"] fullscreen
+for_window [class="^hl_linux$"] border none; fullscreen
+for_window [class="^hl2_linux$"] border none; fullscreen
+for_window [title="^Renoise"] border none; fullscreen
 
 # get elluminate working
 for_window [title="^Elluminate Live!"] floating enable
@@ -219,9 +281,9 @@ for_window [class="^net-sourceforge-jnlp-runtime-Boot$" title="^Downloading"] fl
 for_window [title="^Java$"] floating enable
 
 # create scratchpad shell
-exec urxvt -name scratchpad -e bash
+#exec urxvt256c -name scratchpad -e bash
 
 # start the session
-exec ~/.i3/autostart
+exec --no-startup-id ~/.i3/autostart
 
 # eof

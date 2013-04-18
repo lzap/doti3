@@ -20,11 +20,21 @@ wait_for_program () {
   done
 }
 
-## Desktop background color
-xsetroot -solid '#101010' &
+## Merge Xresources
+xrdb -merge ~/.Xresources &
 
-## Set startup volume
-pactl set-sink-volume 0 '30%' &
+## Desktop background or picture
+#xsetroot -solid '#101010' &
+feh --bg-scale "~/Obrázky/Wallpapers/Brona-jaro09-1680.jpg" &
+
+## Terminal daemon
+urxvt256cd -q -f -o &
+
+## Set startup volume (use pactl info to determine sink name)
+pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo '90%' &
+
+## Load "funny" sample
+pactl upload-sample ~/.i3/that_was_easy.wav that_was_easy &
 
 ## Disable beeps
 xset -b &
@@ -38,11 +48,11 @@ setxkbmap -layout cz,us -option grp:shift_shift_toggle &
 ## Turns on the numlock key in X11
 #numlockx on &
 
-## Load special keys
+## Special keys
 xmodmap ~/.Xmodmap &
 
 ## DPMS monitor setting (standby -> suspend -> off) (seconds)
-xset dpms 300 600 900 &
+xset dpms 600 900 1200 &
 
 ## Set LCD brightness
 xbacklight -set 100 &
@@ -53,76 +63,77 @@ xbacklight -set 100 &
 ## Composite manager
 #xcompmgr -cf -r 0 -D 6 &
 
-## Clipboard manager
+## Mouse and trackball setup
+xinput set-ptr-feedback "Logitech Gaming Mouse G400" 5 20 2 &
+
+xinput set-button-map "Logitech USB Trackball" 3 2 1 4 5 6 7 9 8 &
+xinput set-ptr-feedback "Logitech USB Trackball" 3 30 5 &
+xinput set-prop "Logitech USB Trackball" "Evdev Middle Button Emulation" 1 &
+
+## Applets
 LC_ALL=C parcellite &
+LC_ALL=C nm-applet &
 
 ## OSD
 dunst &
 
 ## Mail checker
-dunst-checkmail -p ~/Mail/INBOX/cur/ -s 150 &
-
-## Load "funny" sample
-pactl upload-sample ~/.i3/that_was_easy.wav that_was_easy &
+#dunst-checkmail -p ~/Mail/INBOX/cur/ -s 150 &
+#~/bin/gocheckmail &
 
 ## apps with defined workspaces
+sleep 1s
 xchat &
-rednotebook &
-decibel-audio-player &
+#rednotebook &
+#decibel-audio-player &
 lexicon &
+sleep 1s
 
-PANEL_CONNECTED=0; xrandr | grep -qE "(DP1|VGA1) connected" && PANEL_CONNECTED=1
+VGA_YES=0
+DP_YES=0
+ANY_YES=0
+xrandr | grep -q "DP1 connected" && DP_YES=1 && ANY_YES=1
+xrandr | grep -q "VGA1 connected" && VGA_YES=1 && ANY_YES=1
 
-if [ grep -qE "VGA1 connected" ]; then
-  # my configuration is for DP1 (move workspaces explicitly)
-  i3-msg move workspace 1 to output VGA1
-  i3-msg move workspace 2 to output VGA1
-  i3-msg move workspace 3 to output VGA1
-  i3-msg move workspace 4 to output VGA1
+if [ $VGA_YES -eq 1 ]; then
+  # (I use smaller VGA screen in work and DP at home)
+  i3-msg "workspace 1; move workspace to output right"
+  sleep 1s
+  i3-msg "workspace 2; move workspace to output right"
+  sleep 1s
+  i3-msg "workspace 3; move workspace to output right"
+  sleep 1s
+  i3-msg "workspace 4; move workspace to output right"
+  sleep 1s
+  i3-msg "workspace 5; move workspace to output right"
+  sleep 1s
 fi
 
-## Working shells on workspace 1
-i3-msg workspace 1
-i3-msg split h
-urxvt -name "shell_a1" &
-wait_for_program
-if [ $PANEL_CONNECTED -eq 1 ]; then
-  gvim --servername vva
-  wait_for_program
-  i3-msg mode normal
-  i3-msg split v
-  i3-msg focus left
-  i3-msg split v
-fi
-
-## Working shells on workspaces 2 and 3
-for w in 2 3; do
+## Workspaces 1-4
+for w in 1 2 3 4; do
   i3-msg workspace $w
-  i3-msg split h
-  urxvt -name "shell_a$w" &
+  urxvt256c -name "shell_a$w" &
   wait_for_program
-  urxvt -name "shell_b$w" &
-  wait_for_program
-  i3-msg split v
-  if [ $PANEL_CONNECTED -eq 1 ]; then
-    # extra vertical shell only on panel
-    urxvt -name "shell_c$w" &
+  if [ $ANY_YES -eq 1 ]; then
+    # extra shell only on extra panel
+    i3-msg split h
+    urxvt256c -name "shell_b$w" &
     wait_for_program
+    i3-msg split v
   fi
-  i3-msg focus left
-  i3-msg split v
+  i3-msg "focus left; split v"
 done
 
 ## Web and mail
-i3-msg workspace 4
+i3-msg workspace 5
 i3-msg split h
-if [ $PANEL_CONNECTED -eq 1 ]; then
-  urxvt -name mail -e bash -c "mutt" &
+if [ $DP_YES -eq 1 ]; then
+  urxvt256c -name mail -e bash -c "mutt" &
   wait_for_program
 fi
-google-chrome &
+google-chrome --auth-server-whitelist="*redhat.com" &>/dev/null &
 wait_for_program
-if [ $PANEL_CONNECTED -eq 1 ]; then
+if [ $DP_YES -eq 1 ]; then
   i3-msg resize grow width 10 px
 fi
 i3-msg split v
