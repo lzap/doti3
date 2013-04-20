@@ -6,7 +6,7 @@ wait_for_program () {
   while true
   do
     # PID of last background command
-    if xdotool search --onlyvisible --pid $!; then
+    if xdotool search --onlyvisible --pid $! 2>/dev/null; then
       break
     else
       if [ $n -eq 90 ]; then
@@ -25,7 +25,7 @@ xrdb -merge ~/.Xresources &
 
 ## Desktop background or picture
 #xsetroot -solid '#101010' &
-feh --bg-scale "~/Obrázky/Wallpapers/Brona-jaro09-1680.jpg" &
+feh --bg-scale "/home/lzap/Obrázky/Wallpapers/Brona-jaro09-1680.jpg" &
 
 ## Terminal daemon
 urxvt256cd -q -f -o &
@@ -49,7 +49,7 @@ setxkbmap -layout cz,us -option grp:shift_shift_toggle &
 #numlockx on &
 
 ## Special keys
-xmodmap ~/.Xmodmap &
+xmodmap /home/lzap/.Xmodmap &
 
 ## DPMS monitor setting (standby -> suspend -> off) (seconds)
 xset dpms 600 900 1200 &
