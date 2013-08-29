@@ -24,7 +24,7 @@ font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec urxvt256c
+bindsym $mod+Return exec xterm
 
 # kill focused window
 bindsym $mod+Shift+Q kill
@@ -203,7 +203,7 @@ bindsym XF86Mail exec /usr/bin/xdg-email; workspace 5
 #bindsym XF86AudioRaiseVolume
 #bindsym XF86AudioPlay
 bindsym XF86Calculator exec /usr/bin/xcalc
-bindsym XF86Favourites exec urxvt256c
+bindsym XF86Favourites exec xterm
 # FLock keys
 #bindsym Help
 #bindsym Undo
@@ -245,6 +245,9 @@ workspace 10 output LVDS1
 assign [class="^Google-chrome$"] 5
 #assign [class="^URxvt$" instance="^mail$"] 4
 assign [class="^Xchat$"] 6
+assign [class="^quasselclient$"] 6
+assign [title="^Quassel IRC"] 6
+assign [title="^weechat"] 6
 assign [class="^Steam$"] 7
 assign [class="^Vide$"] 8
 #assign [class="^Decibel-audio-player.py$"] 7
@@ -265,6 +268,7 @@ for_window [title="^Počítače a kontakty$"] floating enable
 for_window [class="^Steam$"] floating enable; border none
 for_window [class="^feh$"] fullscreen
 for_window [class="^Meld$"] fullscreen
+for_window [class="^MPlayer$"] border none; fullscreen
 for_window [class="^hl_linux$"] border none; fullscreen
 for_window [class="^hl2_linux$"] border none; fullscreen
 for_window [title="^Renoise"] border none; fullscreen

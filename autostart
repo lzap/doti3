@@ -28,10 +28,11 @@ xrdb -merge ~/.Xresources &
 feh --bg-scale "/home/lzap/Obrázky/Wallpapers/Brona-jaro09-1680.jpg" &
 
 ## Terminal daemon
-urxvt256cd -q -f -o &
+#urxvt256cd -q -f -o &
+TERMINAL=xterm
 
 ## Set startup volume (use pactl info to determine sink name)
-pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo '90%' &
+pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo '60%' &
 
 ## Load "funny" sample
 pactl upload-sample ~/.i3/that_was_easy.wav that_was_easy &
@@ -48,11 +49,8 @@ setxkbmap -layout cz,us -option grp:shift_shift_toggle &
 ## Turns on the numlock key in X11
 #numlockx on &
 
-## Special keys
-xmodmap /home/lzap/.Xmodmap &
-
 ## DPMS monitor setting (standby -> suspend -> off) (seconds)
-xset dpms 600 900 1200 &
+xset dpms 600 1200 2000 &
 
 ## Set LCD brightness
 xbacklight -set 100 &
@@ -64,7 +62,9 @@ xbacklight -set 100 &
 #xcompmgr -cf -r 0 -D 6 &
 
 ## Mouse and trackball setup
-xinput set-ptr-feedback "Logitech Gaming Mouse G400" 5 20 2 &
+xinput set-ptr-feedback "Logitech Gaming Mouse G400" 5 20 5 &
+xinput set-ptr-feedback "HID-compliant Mouse HID-compliant Mouse" 1 1 1 &
+xinput set-ptr-feedback "USB OPTICAL MOUSE" 1 2 5 &
 
 xinput set-button-map "Logitech USB Trackball" 3 2 1 4 5 6 7 9 8 &
 xinput set-ptr-feedback "Logitech USB Trackball" 3 30 5 &
@@ -83,7 +83,7 @@ dunst &
 
 ## apps with defined workspaces
 sleep 1s
-xchat &
+$TERMINAL -name IRC -e weechat-curses &
 #rednotebook &
 #decibel-audio-player &
 lexicon &
@@ -95,29 +95,15 @@ ANY_YES=0
 xrandr | grep -q "DP1 connected" && DP_YES=1 && ANY_YES=1
 xrandr | grep -q "VGA1 connected" && VGA_YES=1 && ANY_YES=1
 
-if [ $VGA_YES -eq 1 ]; then
-  # (I use smaller VGA screen in work and DP at home)
-  i3-msg "workspace 1; move workspace to output right"
-  sleep 1s
-  i3-msg "workspace 2; move workspace to output right"
-  sleep 1s
-  i3-msg "workspace 3; move workspace to output right"
-  sleep 1s
-  i3-msg "workspace 4; move workspace to output right"
-  sleep 1s
-  i3-msg "workspace 5; move workspace to output right"
-  sleep 1s
-fi
-
 ## Workspaces 1-4
 for w in 1 2 3 4; do
   i3-msg workspace $w
-  urxvt256c -name "shell_a$w" &
+  $TERMINAL -name "shell_a$w" &
   wait_for_program
   if [ $ANY_YES -eq 1 ]; then
     # extra shell only on extra panel
     i3-msg split h
-    urxvt256c -name "shell_b$w" &
+    $TERMINAL -name "shell_b$w" &
     wait_for_program
     i3-msg split v
   fi
@@ -128,7 +114,7 @@ done
 i3-msg workspace 5
 i3-msg split h
 if [ $DP_YES -eq 1 ]; then
-  urxvt256c -name mail -e bash -c "mutt" &
+  $TERMINAL -name mail &
   wait_for_program
 fi
 google-chrome --auth-server-whitelist="*redhat.com" &>/dev/null &
@@ -137,6 +123,17 @@ if [ $DP_YES -eq 1 ]; then
   i3-msg resize grow width 10 px
 fi
 i3-msg split v
+
+## Special keys
+sleep 5s && xmodmap /home/lzap/.Xmodmap &
+
+if [ $VGA_YES -eq 1 ]; then
+  # (I use smaller VGA screen in work and DP at home)
+  for w in 1 2 3 4 5; do
+    i3-msg "workspace $w; move workspace to output right"
+    sleep 1
+  done
+fi
 
 ## Refresh and GO!
 xrefresh &
