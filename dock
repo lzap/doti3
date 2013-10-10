@@ -1,7 +1,8 @@
 #!/bin/bash
-xrandr --output DP1 --right-of LVDS1 --auto
+xrandr --output DP2 --right-of LVDS1 --auto
 sleep 4s
 i3-msg "workspace 1; move workspace to output right"
 i3-msg "workspace 2; move workspace to output right"
 i3-msg "workspace 3; move workspace to output right"
 i3-msg "workspace 4; move workspace to output right"
+i3-msg "workspace 5; move workspace to output right"

@@ -25,7 +25,7 @@ xrdb -merge ~/.Xresources &
 
 ## Desktop background or picture
 #xsetroot -solid '#101010' &
-feh --bg-scale "/home/lzap/Obrázky/Wallpapers/Brona-jaro09-1680.jpg" &
+feh --bg-scale "/home/lzap/Photos/Wallpapers/Brona-jaro09-1680.jpg" &
 
 ## Terminal daemon
 #urxvt256cd -q -f -o &
@@ -36,6 +36,7 @@ pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo '60%' &
 
 ## Load "funny" sample
 pactl upload-sample ~/.i3/that_was_easy.wav that_was_easy &
+pactl upload-sample ~/.i3/volume_blip.wav volume_blip &
 
 ## Disable beeps
 xset -b &
@@ -92,7 +93,7 @@ sleep 1s
 VGA_YES=0
 DP_YES=0
 ANY_YES=0
-xrandr | grep -q "DP1 connected" && DP_YES=1 && ANY_YES=1
+xrandr | grep -q "DP2 connected" && DP_YES=1 && ANY_YES=1
 xrandr | grep -q "VGA1 connected" && VGA_YES=1 && ANY_YES=1
 
 ## Workspaces 1-4
@@ -117,12 +118,12 @@ if [ $DP_YES -eq 1 ]; then
   $TERMINAL -name mail &
   wait_for_program
 fi
-google-chrome --auth-server-whitelist="*redhat.com" &>/dev/null &
+google-chrome --auth-server-whitelist="*redhat.com" --proxy-pac-url=file:///home/lzap/proxies.pac &>/dev/null &
 wait_for_program
 if [ $DP_YES -eq 1 ]; then
   i3-msg resize grow width 10 px
 fi
-i3-msg split v
+i3-msg "split v; layout stacking"
 
 ## Special keys
 sleep 5s && xmodmap /home/lzap/.Xmodmap &

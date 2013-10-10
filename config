@@ -182,9 +182,9 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 # bindings for ThinkPad keyboard
-bindsym XF86AudioLowerVolume exec /usr/bin/pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo -- '-10%'
-bindsym XF86AudioRaiseVolume exec /usr/bin/pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo -- '+10%'
-bindsym XF86AudioMute exec /usr/bin/pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo 0
+bindsym XF86AudioLowerVolume exec /usr/bin/pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo -- '-10%'; exec /usr/bin/pactl play-sample volume_blip; exec /usr/bin/killall -USR1 i3status
+bindsym XF86AudioRaiseVolume exec /usr/bin/pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo -- '+10%'; exec /usr/bin/pactl play-sample volume_blip; exec /usr/bin/killall -USR1 i3status
+bindsym XF86AudioMute exec /usr/bin/pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo 0; exec /usr/bin/pactl play-sample volume_blip; exec /usr/bin/killall -USR1 i3status
 bindsym XF86Launch1 exec /usr/bin/pactl play-sample that_was_easy
 bindsym XF86MonBrightnessUp exec /usr/bin/xbacklight -inc 10
 bindsym XF86MonBrightnessDown exec /usr/bin/xbacklight -dec 5
@@ -253,11 +253,12 @@ assign [class="^Vide$"] 8
 #assign [class="^Decibel-audio-player.py$"] 7
 assign [class="^Rednotebook$"] 9
 assign [title="Lingea Lexicon 5$"] 10
+assign [title="^Stardict$"] 10
 
 # custom window settings
 for_window [class="^XCalc$"] floating enable
 for_window [class="^URxvt$" instance="scratchpad"] border 1pixel; move scratchpad
-for_window [class="^Google-chrome$"] border none
+for_window [class="^Google-chrome$"] border 1pixel
 for_window [title="Lingea Lexicon 5$"] border none
 for_window [class="^GVim$"] split v, layout stacking
 for_window [class="^Xsane$"] floating enable
