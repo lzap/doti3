@@ -96,12 +96,19 @@ ANY_YES=0
 xrandr | grep -q "DP2 connected" && DP_YES=1 && ANY_YES=1
 xrandr | grep -q "VGA1 connected" && VGA_YES=1 && ANY_YES=1
 
+## Reconfigure - smaller VGA screen in office and huge DP at home
+if [ $VGA_YES -eq 1 ]; then
+  for w in 1 2 3 4 5; do
+    i3-msg "workspace $w; move workspace to output VGA1"
+  done
+fi
+
 ## Workspaces 1-4
 for w in 1 2 3 4; do
   i3-msg workspace $w
   $TERMINAL -name "shell_a$w" &
   wait_for_program
-  if [ $ANY_YES -eq 1 ]; then
+  if [ $DP_YES -eq 1 ]; then
     # extra shell only on extra panel
     i3-msg split h
     $TERMINAL -name "shell_b$w" &
@@ -125,17 +132,11 @@ if [ $DP_YES -eq 1 ]; then
 fi
 i3-msg "split v; layout stacking"
 
+## Refresh
+xrefresh &
+
 ## Special keys
 sleep 5s && xmodmap /home/lzap/.Xmodmap &
 
-if [ $VGA_YES -eq 1 ]; then
-  # (I use smaller VGA screen in work and DP at home)
-  for w in 1 2 3 4 5; do
-    i3-msg "workspace $w; move workspace to output right"
-    sleep 1
-  done
-fi
-
-## Refresh and GO!
-xrefresh &
+## Good work :-)
 exit 0

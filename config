@@ -88,7 +88,7 @@ bindsym $mod+a focus parent
 # next/previous workspace
 bindsym Mod1+Tab focus right
 bindsym Mod1+Shift+Tab focus left
-bindsym $mod+Tab workspace back_and_forth
+bindsym $mod+Tab focus down
 
 # change focus between tiling / floating windows
 bindsym $mod+Shift+Tab focus mode_toggle
