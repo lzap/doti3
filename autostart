@@ -45,7 +45,7 @@ xset -b &
 setxkbmap -layout cz,us -option grp:shift_shift_toggle &
 
 ## C-A-Backspace to kill X
-#setxkbmap -option terminate:ctrl_alt_bksp & 
+#setxkbmap -option terminate:ctrl_alt_bksp &
 
 ## Turns on the numlock key in X11
 #numlockx on &
@@ -63,13 +63,7 @@ xbacklight -set 100 &
 #xcompmgr -cf -r 0 -D 6 &
 
 ## Mouse and trackball setup
-xinput set-ptr-feedback "Logitech Gaming Mouse G400" 5 20 5 &
-xinput set-ptr-feedback "HID-compliant Mouse HID-compliant Mouse" 1 1 1 &
-xinput set-ptr-feedback "USB OPTICAL MOUSE" 1 2 5 &
-
-xinput set-button-map "Logitech USB Trackball" 3 2 1 4 5 6 7 9 8 &
-xinput set-ptr-feedback "Logitech USB Trackball" 3 30 5 &
-xinput set-prop "Logitech USB Trackball" "Evdev Middle Button Emulation" 1 &
+~/bin/configure-input-devices >/dev/null 2>&1 &
 
 ## Applets
 LC_ALL=C parcellite &
@@ -79,12 +73,11 @@ LC_ALL=C nm-applet &
 dunst &
 
 ## Mail checker
-#dunst-checkmail -p ~/Mail/INBOX/cur/ -s 150 &
-#~/bin/gocheckmail &
+~/work/gocheckmail/gocheckmail &
 
 ## apps with defined workspaces
 sleep 1s
-$TERMINAL -name IRC -e weechat-curses &
+$TERMINAL -e weechat-curses &
 #rednotebook &
 #decibel-audio-player &
 lexicon &
@@ -96,26 +89,23 @@ ANY_YES=0
 xrandr | grep -q "DP2 connected" && DP_YES=1 && ANY_YES=1
 xrandr | grep -q "VGA1 connected" && VGA_YES=1 && ANY_YES=1
 
-## Reconfigure - smaller VGA screen in office and huge DP at home
-if [ $VGA_YES -eq 1 ]; then
-  for w in 1 2 3 4 5; do
-    i3-msg "workspace $w; move workspace to output VGA1"
-  done
-fi
-
 ## Workspaces 1-4
 for w in 1 2 3 4; do
   i3-msg workspace $w
-  $TERMINAL -name "shell_a$w" &
+  $TERMINAL &
   wait_for_program
   if [ $DP_YES -eq 1 ]; then
-    # extra shell only on extra panel
     i3-msg split h
-    $TERMINAL -name "shell_b$w" &
+    $TERMINAL &
     wait_for_program
     i3-msg split v
+    i3-msg "focus left; split v"
+  else
+    i3-msg layout tabbed
+    $TERMINAL &
+    wait_for_program
+    i3-msg focus left
   fi
-  i3-msg "focus left; split v"
 done
 
 ## Web and mail
@@ -132,11 +122,21 @@ if [ $DP_YES -eq 1 ]; then
 fi
 i3-msg "split v; layout stacking"
 
+## Reconfigure - smaller VGA screen in office and huge DP at home
+if [ $VGA_YES -eq 1 ]; then
+  for w in 1 2 3 4 5; do
+    i3-msg "workspace $w; move workspace to output VGA1"
+  done
+fi
+
 ## Refresh
 xrefresh &
 
 ## Special keys
 sleep 5s && xmodmap /home/lzap/.Xmodmap &
+
+## Start Workrave
+workrave &
 
 ## Good work :-)
 exit 0

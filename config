@@ -25,6 +25,7 @@ floating_modifier $mod
 
 # start a terminal
 bindsym $mod+Return exec xterm
+bindsym $mod+t layout tabbed; exec xterm
 
 # kill focused window
 bindsym $mod+Shift+Q kill
@@ -67,6 +68,8 @@ bindsym $mod+Shift+Right move right
 
 # split orientation
 bindsym $mod+v layout toggle split
+bindsym $mod+uacute split vertical
+bindsym $mod+parenright split horizontal
 
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen
@@ -254,6 +257,7 @@ assign [class="^Vide$"] 8
 assign [class="^Rednotebook$"] 9
 assign [title="Lingea Lexicon 5$"] 10
 assign [title="^Stardict$"] 10
+assign [class="^Sflphone$"] 10
 
 # custom window settings
 for_window [class="^XCalc$"] floating enable
@@ -262,8 +266,10 @@ for_window [class="^Google-chrome$"] border 1pixel
 for_window [title="Lingea Lexicon 5$"] border none
 for_window [class="^GVim$"] split v, layout stacking
 for_window [class="^Xsane$"] floating enable
+for_window [class="^SFLphone"] floating enable
 for_window [class="^TeamViewer.exe$"] floating enable
 for_window [title="^TeamViewer$"] floating enable
+for_window [title="^Computers & Contacts$"] floating enable
 for_window [title="- TeamViewer -"] floating enable
 for_window [title="^Počítače a kontakty$"] floating enable
 for_window [class="^Steam$"] floating enable; border none
@@ -273,11 +279,14 @@ for_window [class="^MPlayer$"] border none; fullscreen
 for_window [class="^hl_linux$"] border none; fullscreen
 for_window [class="^hl2_linux$"] border none; fullscreen
 for_window [title="^Renoise"] border none; fullscreen
+for_window [class="^Sflphone$"] floating enable
+for_window [class="^Workrave$"] floating enable
 
 # get elluminate working
 for_window [title="^Elluminate Live!"] floating enable
 for_window [title="^Application Sharing"] floating enable
 for_window [class="^net-sourceforge-jnlp-runtime-Boot$" title="^Downloading"] floating enable
+for_window [class="^net-sourceforge-jnlp-runtime-Boot$" title="^win0"] floating enable; move position 0 0
 for_window [title="^Java$"] floating enable
 
 # create scratchpad shell
