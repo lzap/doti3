@@ -1,8 +1,8 @@
 #!/bin/bash
+xrandr --output DP1 --off
 xrandr --output DP2 --off
-sleep 2s
-i3-msg "workspace 1; move workspace to output right"
-i3-msg "workspace 2; move workspace to output right"
-i3-msg "workspace 3; move workspace to output right"
-i3-msg "workspace 4; move workspace to output right"
-i3-msg "workspace 5; move workspace to output right"
+pacmd set-sink-port 0 analog-output-speaker
+sleep 2
+for W in $(seq 1 10); do
+  i3-msg "workspace $W; move workspace to output LVDS1"
+done

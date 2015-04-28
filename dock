@@ -1,11 +1,11 @@
 #!/bin/bash
-xrandr --output DP2 --right-of LVDS1 --auto
-sleep 3s
-i3-msg "workspace 1; move workspace to output right"
-i3-msg "workspace 2; move workspace to output right"
-i3-msg "workspace 3; move workspace to output right"
-i3-msg "workspace 4; move workspace to output right"
-i3-msg "workspace 5; move workspace to output right"
-sleep 1s
+# TODO is this DP1 or DP2?
+xrandr --output DP1 --left-of LVDS1 --auto
+pacmd set-sink-port 0 analog-output
+sleep 3
+for W in 1 2 3 4 5; do
+  i3-msg "workspace $W; move workspace to output DP1"
+done
+sleep 1
 xmodmap /home/lzap/.Xmodmap
 configure-input-devices

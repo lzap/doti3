@@ -20,6 +20,18 @@ wait_for_program () {
   done
 }
 
+## Determine connected monitors
+VGA_YES=0
+DP_YES=0
+ANY_YES=0
+xrandr | grep -Eq "DP[12345] connected" && DP_YES=1 && ANY_YES=1
+xrandr | grep -Eq "VGA-[12345] connected" && VGA_YES=1 && ANY_YES=1
+DP=$(xrandr | grep -E "DP[12345] connected" | grep -oE "DP[12345]")
+VGA=$(xrandr | grep -E "VGA-[12345] connected" | grep -oE "VGA-[12345]")
+
+## Configure panel from left side
+[ $DP_YES -eq 1 ] && xrandr --output $DP --left-of LVDS1 --auto
+
 ## Merge Xresources
 xrdb -merge ~/.Xresources &
 
@@ -32,7 +44,7 @@ feh --bg-scale "/home/lzap/Photos/Wallpapers/Brona-jaro09-1680.jpg" &
 TERMINAL=xterm
 
 ## Set startup volume (use pactl info to determine sink name)
-pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo '60%' &
+#pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo '60%' &
 
 ## Load "funny" sample
 pactl upload-sample ~/.i3/that_was_easy.wav that_was_easy &
@@ -78,16 +90,8 @@ dunst &
 ## apps with defined workspaces
 sleep 1s
 $TERMINAL -e weechat-curses &
-#rednotebook &
-#decibel-audio-player &
-lexicon &
+#lexicon &
 sleep 1s
-
-VGA_YES=0
-DP_YES=0
-ANY_YES=0
-xrandr | grep -q "DP2 connected" && DP_YES=1 && ANY_YES=1
-xrandr | grep -q "VGA1 connected" && VGA_YES=1 && ANY_YES=1
 
 ## Workspaces 1-4
 for w in 1 2 3 4; do
@@ -100,6 +104,7 @@ for w in 1 2 3 4; do
     wait_for_program
     i3-msg split v
     i3-msg "focus left; split v"
+    i3-msg "move workspace to output $DP"
   else
     i3-msg layout tabbed
     $TERMINAL &
@@ -115,8 +120,8 @@ if [ $DP_YES -eq 1 ]; then
   $TERMINAL -name mail &
   wait_for_program
 fi
-google-chrome --auth-server-whitelist="*redhat.com" --proxy-pac-url=file:///home/lzap/proxies.pac &>/dev/null &
-wait_for_program
+~/bin/chrome &
+sleep 5
 if [ $DP_YES -eq 1 ]; then
   i3-msg resize grow width 10 px
 fi
@@ -125,7 +130,7 @@ i3-msg "split v; layout stacking"
 ## Reconfigure - smaller VGA screen in office and huge DP at home
 if [ $VGA_YES -eq 1 ]; then
   for w in 1 2 3 4 5; do
-    i3-msg "workspace $w; move workspace to output VGA1"
+    i3-msg "workspace $w; move workspace to output $VGA"
   done
 fi
 
@@ -137,6 +142,9 @@ sleep 5s && xmodmap /home/lzap/.Xmodmap &
 
 ## Start Workrave
 workrave &
+
+## Update dmenu cache
+dmenu_path >/dev/null&
 
 ## Good work :-)
 exit 0

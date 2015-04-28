@@ -39,8 +39,9 @@ bindsym $mod+Shift+R restart
 bindsym $mod+Shift+E exit
 
 # screen locker (first move to "safe" workspace without any chat app)
-bindsym Control+Mod1+l exec i3-msg workspace 1 && i3lock -c 111111 -d
-bindsym Control+Mod1+s exec sleep 5 && xset dpms force standby
+# also make sure it's the primary (laptop) display (bug in wakeup and brightness)
+bindsym Control+Mod1+l exec i3-msg workspace 10 && i3lock -c 111111 -d
+bindsym Control+Mod1+s exec i3-msg workspace 10 && sleep 5 && xset dpms force standby
 
 # change focus
 bindsym $mod+h focus left
@@ -66,7 +67,7 @@ bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
-# split orientation
+
 bindsym $mod+v layout toggle split
 bindsym $mod+uacute split vertical
 bindsym $mod+parenright split horizontal
@@ -89,8 +90,8 @@ bindsym $mod+a focus parent
 #bindcode $mod+d focus child
 
 # next/previous workspace
-bindsym Mod1+Tab focus right
-bindsym Mod1+Shift+Tab focus left
+bindsym Mod1+Tab focus left
+bindsym Mod1+Shift+Tab focus right
 bindsym $mod+Tab focus down
 
 # change focus between tiling / floating windows
@@ -205,8 +206,9 @@ bindsym XF86Mail exec /usr/bin/xdg-email; workspace 5
 #bindsym XF86AudioLowerVolume
 #bindsym XF86AudioRaiseVolume
 #bindsym XF86AudioPlay
-bindsym XF86Calculator exec /usr/bin/xcalc
-bindsym XF86Favourites exec xterm
+#bindsym XF86Favourites echo DOESNOTWORK
+#bindsym XF86Calculator exec /usr/bin/xcalc
+bindsym XF86Calculator exec /usr/bin/xbacklight -set 100
 # FLock keys
 #bindsym Help
 #bindsym Undo
@@ -275,12 +277,13 @@ for_window [title="^Počítače a kontakty$"] floating enable
 for_window [class="^Steam$"] floating enable; border none
 for_window [class="^feh$"] fullscreen
 for_window [class="^Meld$"] fullscreen
-for_window [class="^MPlayer$"] border none; fullscreen
 for_window [class="^hl_linux$"] border none; fullscreen
 for_window [class="^hl2_linux$"] border none; fullscreen
 for_window [title="^Renoise"] border none; fullscreen
 for_window [class="^Sflphone$"] floating enable
 for_window [class="^Workrave$"] floating enable
+for_window [class="^History buffer$"] border none; fullscreen
+for_window [title="^Google+ Hangouts is sharing your screen"] floating enable
 
 # get elluminate working
 for_window [title="^Elluminate Live!"] floating enable
