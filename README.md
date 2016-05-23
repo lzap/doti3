@@ -12,3 +12,4 @@ Tools used
 * gocheckmail - https://github.com/lzap/gocheckmail
 * feh - http://feh.finalrewind.org
 * systemd, X Window utils, binutils, shell...
+* perl-File-MimeInfo - otherwise xdg-open does not work correctly

@@ -1,10 +1,10 @@
 #!/bin/bash
-# TODO is this DP1 or DP2?
-xrandr --output DP1 --left-of LVDS1 --auto
+DP=$(xrandr | grep -E "DP[12345] connected" | grep -oE "DP[12345]")
+xrandr --output $DP --left-of LVDS1 --auto
 pacmd set-sink-port 0 analog-output
 sleep 3
 for W in 1 2 3 4 5; do
-  i3-msg "workspace $W; move workspace to output DP1"
+  i3-msg "workspace $W; move workspace to output $DP"
 done
 sleep 1
 xmodmap /home/lzap/.Xmodmap

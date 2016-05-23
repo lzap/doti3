@@ -23,6 +23,16 @@ font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
+# No mouse cursor "stealing" across workspaces
+mouse_warping none
+
+# Some apps are "dumb"
+popup_during_fullscreen leave_fullscreen
+
+# Clicking on links no more "steals" focus
+# TODO uncomment me in new version
+#focus_on_window_activation none
+
 # start a terminal
 bindsym $mod+Return exec xterm
 bindsym $mod+t layout tabbed; exec xterm
@@ -40,8 +50,8 @@ bindsym $mod+Shift+E exit
 
 # screen locker (first move to "safe" workspace without any chat app)
 # also make sure it's the primary (laptop) display (bug in wakeup and brightness)
-bindsym Control+Mod1+l exec i3-msg workspace 10 && i3lock -c 111111 -d
-bindsym Control+Mod1+s exec i3-msg workspace 10 && sleep 5 && xset dpms force standby
+bindsym Control+Mod1+l exec i3-msg workspace 1 && i3lock -c 111111 -d
+bindsym Control+Mod1+s exec i3-msg workspace 1 && sleep 2 && xset dpms force standby
 
 # change focus
 bindsym $mod+h focus left
@@ -186,9 +196,9 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 # bindings for ThinkPad keyboard
-bindsym XF86AudioLowerVolume exec /usr/bin/pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo -- '-10%'; exec /usr/bin/pactl play-sample volume_blip; exec /usr/bin/killall -USR1 i3status
-bindsym XF86AudioRaiseVolume exec /usr/bin/pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo -- '+10%'; exec /usr/bin/pactl play-sample volume_blip; exec /usr/bin/killall -USR1 i3status
-bindsym XF86AudioMute exec /usr/bin/pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo 0; exec /usr/bin/pactl play-sample volume_blip; exec /usr/bin/killall -USR1 i3status
+bindsym XF86AudioLowerVolume exec /usr/bin/pactl set-sink-volume 0 -20%; exec /usr/bin/pactl play-sample volume_blip; exec /usr/bin/killall -USR1 i3status
+bindsym XF86AudioRaiseVolume exec /usr/bin/pactl set-sink-volume 0 +20%; exec /usr/bin/pactl play-sample volume_blip; exec /usr/bin/killall -USR1 i3status
+bindsym XF86AudioMute exec /usr/bin/pactl set-sink-volume 0 0; exec /usr/bin/pactl play-sample volume_blip; exec /usr/bin/killall -USR1 i3status
 bindsym XF86Launch1 exec /usr/bin/pactl play-sample that_was_easy
 bindsym XF86MonBrightnessUp exec /usr/bin/xbacklight -inc 10
 bindsym XF86MonBrightnessDown exec /usr/bin/xbacklight -dec 5
@@ -256,7 +266,7 @@ assign [title="^weechat"] 6
 assign [class="^Steam$"] 7
 assign [class="^Vide$"] 8
 #assign [class="^Decibel-audio-player.py$"] 7
-assign [class="^Rednotebook$"] 9
+assign [class="^telegram$"] 9
 assign [title="Lingea Lexicon 5$"] 10
 assign [title="^Stardict$"] 10
 assign [class="^Sflphone$"] 10
@@ -264,7 +274,7 @@ assign [class="^Sflphone$"] 10
 # custom window settings
 for_window [class="^XCalc$"] floating enable
 for_window [class="^URxvt$" instance="scratchpad"] border 1pixel; move scratchpad
-for_window [class="^Google-chrome$"] border 1pixel
+for_window [class="Google-chrome$"] border 1pixel
 for_window [title="Lingea Lexicon 5$"] border none
 for_window [class="^GVim$"] split v, layout stacking
 for_window [class="^Xsane$"] floating enable
@@ -291,6 +301,7 @@ for_window [title="^Application Sharing"] floating enable
 for_window [class="^net-sourceforge-jnlp-runtime-Boot$" title="^Downloading"] floating enable
 for_window [class="^net-sourceforge-jnlp-runtime-Boot$" title="^win0"] floating enable; move position 0 0
 for_window [title="^Java$"] floating enable
+#for_window [class="^love$"] floating enable
 
 # create scratchpad shell
 #exec urxvt256c -name scratchpad -e bash

@@ -77,12 +77,8 @@ xbacklight -set 100 &
 ## Mouse and trackball setup
 ~/bin/configure-input-devices >/dev/null 2>&1 &
 
-## Applets
-LC_ALL=C parcellite &
-LC_ALL=C nm-applet &
-
 ## OSD
-dunst &
+LC_ALL=C dunst &
 
 ## Mail checker
 ~/work/gocheckmail/gocheckmail &
@@ -140,8 +136,14 @@ xrefresh &
 ## Special keys
 sleep 5s && xmodmap /home/lzap/.Xmodmap &
 
-## Start Workrave
-workrave &
+## Start taskbar utils
+LC_ALL=C parcellite &>/dev/null &
+LC_ALL=C nm-applet &>/dev/null &
+LC_ALL=C workrave &>/dev/null &
+LC_ALL=C zeal &>/dev/null &
+
+## Telegram
+#telegram &
 
 ## Update dmenu cache
 dmenu_path >/dev/null&
