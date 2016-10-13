@@ -46,7 +46,7 @@ bindsym $mod+space exec /home/lzap/bin/dmenu_run
 # reload/restart/exit
 bindsym $mod+Shift+C reload
 bindsym $mod+Shift+R restart
-bindsym $mod+Shift+E exit
+#bindsym $mod+Shift+E exit
 
 # screen locker (first move to "safe" workspace without any chat app)
 # also make sure it's the primary (laptop) display (bug in wakeup and brightness)

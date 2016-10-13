@@ -25,12 +25,15 @@ VGA_YES=0
 DP_YES=0
 ANY_YES=0
 xrandr | grep -Eq "DP[12345] connected" && DP_YES=1 && ANY_YES=1
-xrandr | grep -Eq "VGA-[12345] connected" && VGA_YES=1 && ANY_YES=1
+xrandr | grep -Eq "VGA[12345] connected" && VGA_YES=1 && ANY_YES=1
 DP=$(xrandr | grep -E "DP[12345] connected" | grep -oE "DP[12345]")
-VGA=$(xrandr | grep -E "VGA-[12345] connected" | grep -oE "VGA-[12345]")
+VGA=$(xrandr | grep -E "VGA[12345] connected" | grep -oE "VGA[12345]")
 
 ## Configure panel from left side
-[ $DP_YES -eq 1 ] && xrandr --output $DP --left-of LVDS1 --auto
+echo "Configuring via xrandr: $DP ($DP_YES) $VGA ($VGA_YES)"
+if [ $DP_YES -eq 1 ]; then
+  xrandr --output LVDS1 --mode 1600x900 --right-of DP2 --output DP2 --mode 2560x1440
+fi
 
 ## Merge Xresources
 xrdb -merge ~/.Xresources &

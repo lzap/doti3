@@ -1,8 +1,9 @@
 #!/bin/bash
 killall mbsync 2>/dev/null
-DP=$(xrandr | grep -E "DP[12345] connected" | grep -oE "DP[12345]")
-xrandr --output $DP --off
-xrandr --output VIRTUAL1 --off
+for DP in DP1 DP2 DP3; do
+  xrandr --output $DP --off
+  #xrandr --output VIRTUAL1 --off
+done
 pacmd set-sink-port 0 analog-output-speaker
 sleep 2
 for W in $(seq 1 10); do
