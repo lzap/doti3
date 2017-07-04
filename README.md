@@ -13,3 +13,8 @@ Tools used
 * feh - http://feh.finalrewind.org
 * systemd, X Window utils, binutils, shell...
 * perl-File-MimeInfo - otherwise xdg-open does not work correctly
+
+Samples
+-------
+
+Few samples were downloaded from http://dictionary.cambridge.org/dictionary/english

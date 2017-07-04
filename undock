@@ -6,6 +6,7 @@ for DP in DP1 DP2 DP3; do
 done
 pacmd set-sink-port 0 analog-output-speaker
 sleep 2
+nmcli r all on
 for W in $(seq 1 10); do
   i3-msg "workspace $W; move workspace to output LVDS1"
 done

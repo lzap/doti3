@@ -7,5 +7,6 @@ for W in 1 2 3 4 5; do
   i3-msg "workspace $W; move workspace to output $DP"
 done
 sleep 1
+nmcli r all off
 xmodmap /home/lzap/.Xmodmap
 configure-input-devices

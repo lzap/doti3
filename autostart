@@ -1,5 +1,12 @@
 #!/bin/sh
 
+# Packages you need to install on Fedora in order to get this setup:
+# dnf install i3lock dmenu dunst network-manager-applet workrave stardict numlockx feh \
+# scrot f\*-backgrounds-base f\*-backgrounds-extras-base
+
+# Also using:
+# https://github.com/Tomas-M/xlunch
+
 # Wait for program coming up
 wait_for_program () {
   n=0
@@ -9,49 +16,37 @@ wait_for_program () {
     if xdotool search --onlyvisible --pid $! 2>/dev/null; then
       break
     else
-      if [ $n -eq 90 ]; then
-        notify-send -u critical "Error during start"
+      if [ $n -eq 200 ]; then
+        notify-send -u critical "Error during start: last program $! did not started fast enough"
         break
       else
         n=`expr $n + 1`
-        sleep 0.5
+        sleep 0.1
       fi
     fi
   done
 }
 
-## Determine connected monitors
-VGA_YES=0
-DP_YES=0
-ANY_YES=0
-xrandr | grep -Eq "DP[12345] connected" && DP_YES=1 && ANY_YES=1
-xrandr | grep -Eq "VGA[12345] connected" && VGA_YES=1 && ANY_YES=1
-DP=$(xrandr | grep -E "DP[12345] connected" | grep -oE "DP[12345]")
-VGA=$(xrandr | grep -E "VGA[12345] connected" | grep -oE "VGA[12345]")
-
 ## Configure panel from left side
-echo "Configuring via xrandr: $DP ($DP_YES) $VGA ($VGA_YES)"
-if [ $DP_YES -eq 1 ]; then
-  xrandr --output LVDS1 --mode 1600x900 --right-of DP2 --output DP2 --mode 2560x1440
-fi
+PRIM_OUT=DisplayPort-0
+SEC_OUT=DVI-0
+xrandr --output $SEC_OUT --mode 1280x1024 --right-of $PRIM_OUT --output $PRIM_OUT --mode 2560x1440
 
 ## Merge Xresources
 xrdb -merge ~/.Xresources &
 
 ## Desktop background or picture
 #xsetroot -solid '#101010' &
-feh --bg-scale "/home/lzap/Photos/Wallpapers/Brona-jaro09-1680.jpg" &
+feh --bg-fill $(find /usr/share/backgrounds -type f -name \*jpg -o -name \*.png | shuf -n 1)
 
 ## Terminal daemon
-#urxvt256cd -q -f -o &
 TERMINAL=xterm
 
-## Set startup volume (use pactl info to determine sink name)
-#pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo '60%' &
-
-## Load "funny" sample
+## Load samples for volume keys feedback
 pactl upload-sample ~/.i3/that_was_easy.wav that_was_easy &
 pactl upload-sample ~/.i3/volume_blip.wav volume_blip &
+pactl upload-sample ~/.i3/mute.wav mute &
+pactl upload-sample ~/.i3/speak.wav speak &
 
 ## Disable beeps
 xset -b &
@@ -63,7 +58,7 @@ setxkbmap -layout cz,us -option grp:shift_shift_toggle &
 #setxkbmap -option terminate:ctrl_alt_bksp &
 
 ## Turns on the numlock key in X11
-#numlockx on &
+numlockx on &
 
 ## DPMS monitor setting (standby -> suspend -> off) (seconds)
 xset dpms 600 1200 2000 &
@@ -74,82 +69,52 @@ xbacklight -set 100 &
 ## Gamma correction through the X server
 #xgamma -gamma 1.1 &
 
-## Composite manager
-#xcompmgr -cf -r 0 -D 6 &
-
 ## Mouse and trackball setup
 ~/bin/configure-input-devices >/dev/null 2>&1 &
 
 ## OSD
 LC_ALL=C dunst &
 
-## Mail checker
-~/work/gocheckmail/gocheckmail &
-
-## apps with defined workspaces
-sleep 1s
-$TERMINAL -e weechat-curses &
-#lexicon &
-sleep 1s
-
-## Workspaces 1-4
+## Setup workspaces and terminals
 for w in 1 2 3 4; do
-  i3-msg workspace $w
+  i3-msg "workspace $w; move workspace to output $PRIM_OUT"
   $TERMINAL &
   wait_for_program
-  if [ $DP_YES -eq 1 ]; then
-    i3-msg split h
-    $TERMINAL &
-    wait_for_program
-    i3-msg split v
-    i3-msg "focus left; split v"
-    i3-msg "move workspace to output $DP"
-  else
-    i3-msg layout tabbed
-    $TERMINAL &
-    wait_for_program
-    i3-msg focus left
-  fi
+  i3-msg split h
+  $TERMINAL &
+  wait_for_program
+  i3-msg split v
+  i3-msg "focus left; split v"
+  #i3-msg "move workspace to output $DP"
 done
 
-## Web and mail
 i3-msg workspace 5
-i3-msg split h
-if [ $DP_YES -eq 1 ]; then
-  $TERMINAL -name mail &
-  wait_for_program
-fi
+i3-msg layout tabbed
 ~/bin/chrome &
-sleep 5
-if [ $DP_YES -eq 1 ]; then
-  i3-msg resize grow width 10 px
-fi
-i3-msg "split v; layout stacking"
 
-## Reconfigure - smaller VGA screen in office and huge DP at home
-if [ $VGA_YES -eq 1 ]; then
-  for w in 1 2 3 4 5; do
-    i3-msg "workspace $w; move workspace to output $VGA"
-  done
-fi
+for w in 6 7 8 9 10; do
+  i3-msg "workspace $w; move workspace to output $SEC_OUT"
+done
+
+## Start apps with defined workspaces
+i3-msg "workspace 6"
+$TERMINAL -e weechat-curses &
 
 ## Refresh
 xrefresh &
 
 ## Special keys
-sleep 5s && xmodmap /home/lzap/.Xmodmap &
+sleep 4s && xmodmap /home/lzap/.Xmodmap &
 
 ## Start taskbar utils
 LC_ALL=C parcellite &>/dev/null &
 LC_ALL=C nm-applet &>/dev/null &
 LC_ALL=C workrave &>/dev/null &
-LC_ALL=C zeal &>/dev/null &
+#LC_ALL=C dropbox start &>/dev/null &
 
-## Telegram
-#telegram &
-
-## Update dmenu cache
-dmenu_path >/dev/null&
+## Update launcher cache
+bash /home/lzap/work/xlunch/extra/genconf > /home/lzap/.xlunch/icons.conf 2>/dev/null &
+#dmenu_path >/dev/null &
 
 ## Good work :-)
 exit 0

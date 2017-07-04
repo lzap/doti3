@@ -1,63 +1,50 @@
-# i3 config file (v4)
+# Lukas Zapletal (lzap) i3 config file
 #
-# Please see http://i3wm.org/docs/userguide.html for a complete reference!
-#
-# To give a presentation do:
-# xrandr (and determine active outputs and resolutions)
-#
-# xrandr --output LVDS1 --mode 1024x768 --output DP1 --mode 1280x720 --same-as LVDS1
-# xrandr --output VGA1 --mode 1024x768 --same-as LVDS1
-#
-# If you dont want clone then:
-# xrandr --output VGA1 --mode 1024x768 --right-of LVDS1
-#
-# To switch back:
-# xrandr --output VGA1 --right-of LVDS1 --auto
+# Please see https://i3wm.org/docs/user-contributed/lzap-config.html or
+# https://lukas.zapletalovi.com/2012/08/new-in-fedora-17-i3-42-tiling-wm.html
 
+# my main modifier key is Win
 set $mod Mod4
 
 # font for window titles. ISO 10646 = Unicode
 font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
-#font xft:terminus:pixelsize=10
 
-# Use Mouse+$mod to drag floating windows to their wanted position
+# Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
-# No mouse cursor "stealing" across workspaces
+# no mouse cursor "stealing" across workspaces
 mouse_warping none
 
-# Some apps are "dumb"
+# workaround for some my "dumb" apps
 popup_during_fullscreen leave_fullscreen
 
-# Clicking on links no more "steals" focus
-# TODO uncomment me in new version
-#focus_on_window_activation none
+# clicking on links never steals focus
+focus_on_window_activation urgent
 
 # start a terminal
 bindsym $mod+Return exec xterm
-bindsym $mod+t layout tabbed; exec xterm
 
 # kill focused window
 bindsym $mod+Shift+Q kill
 
-# start dmenu (a program launcher)
-bindsym $mod+space exec /home/lzap/bin/dmenu_run
+# start dmenu (program launcher)
+bindsym $mod+space exec /home/lzap/work/xlunch/xlunch -r -f /usr/share/fonts/google-roboto/RobotoCondensed-Regular.ttf/10
+#bindsym $mod+space exec /home/lzap/bin/dmenu_run
 
-# reload/restart/exit
+# reload/restart/exit (confirmation does not work anymore)
 bindsym $mod+Shift+C reload
-bindsym $mod+Shift+R restart
+#bindsym $mod+Shift+R restart
 #bindsym $mod+Shift+E exit
 
 # screen locker (first move to "safe" workspace without any chat app)
-# also make sure it's the primary (laptop) display (bug in wakeup and brightness)
 bindsym Control+Mod1+l exec i3-msg workspace 1 && i3lock -c 111111 -d
-bindsym Control+Mod1+s exec i3-msg workspace 1 && sleep 2 && xset dpms force standby
+bindsym Control+Mod1+s exec i3-msg workspace 1 && sleep 1 && xset dpms force standby
 
 # change focus
-bindsym $mod+h focus left
-bindsym $mod+j focus down
-bindsym $mod+k focus up
-bindsym $mod+l focus right
+bindsym $mod+j focus left
+bindsym $mod+k focus down
+bindsym $mod+l focus up
+bindsym $mod+uring focus right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
@@ -66,10 +53,10 @@ bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
 # move focused window
-bindsym $mod+Shift+H move left
-bindsym $mod+Shift+J move down
-bindsym $mod+Shift+K move up
-bindsym $mod+Shift+L move right
+bindsym $mod+Shift+j move left
+bindsym $mod+Shift+k move down
+bindsym $mod+Shift+l move up
+bindsym $mod+Shift+uring move right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Shift+Left move left
@@ -77,27 +64,26 @@ bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
-
-bindsym $mod+v layout toggle split
-bindsym $mod+uacute split vertical
-bindsym $mod+parenright split horizontal
+# splitting
+bindsym $mod+v split vertical
+bindsym $mod+h split horizontal
 
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen
 
-# change container layout (stacked, tabbed, default)
-bindsym $mod+s layout stacking
-bindsym $mod+w layout tabbed
-bindsym $mod+e layout default
+# change container layout
+bindsym $mod+s layout toggle split
+bindsym $mod+x layout toggle all
+bindsym $mod+t layout tabbed
 
 # toggle tiling / floating
-bindsym $mod+d floating toggle
+bindsym $mod+y floating toggle
 
 # focus the parent container
 bindsym $mod+a focus parent
 
 # focus the child container
-#bindcode $mod+d focus child
+bindsym $mod+d focus child
 
 # next/previous workspace
 bindsym Mod1+Tab focus left
@@ -129,7 +115,7 @@ bindsym $mod+8 workspace 8
 bindsym $mod+9 workspace 9
 bindsym $mod+0 workspace 10
 
-# switch to workspace mapping
+# switch to workspace mapping - this won't work well
 #bindsym F1 workspace 1
 #bindsym F2 workspace 2
 #bindsym F3 workspace 3
@@ -141,7 +127,12 @@ bindsym $mod+0 workspace 10
 #bindsym Mod1+F4 workspace 9
 #bindsym Mod1+F5 workspace 10
 
-# my launch keys and function keys are swapped with xmodmap
+# use rebinding via ~/.Xmodmap and some free key codes instead
+# keycode 67 = XF86Launch5
+# keycode 68 = XF86Launch6
+# keycode 69 = XF86Launch7
+# keycode 70 = XF86Launch8
+# keycode 71 = XF86Launch9
 bindsym XF86Launch5 workspace 1
 bindsym XF86Launch6 workspace 2
 bindsym XF86Launch7 workspace 3
@@ -195,6 +186,10 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
+# bindings for MUTE/UNMUTE
+bindsym $mod+F11 exec /usr/bin/pactl set-source-mute alsa_input.usb-Logitech_Logitech_USB_Headset-00.analog-mono yes; exec /usr/bin/pactl play-sample mute
+bindsym $mod+F12 exec /usr/bin/pactl set-source-mute alsa_input.usb-Logitech_Logitech_USB_Headset-00.analog-mono no; exec /usr/bin/pactl play-sample speak
+
 # bindings for ThinkPad keyboard
 bindsym XF86AudioLowerVolume exec /usr/bin/pactl set-sink-volume 0 -20%; exec /usr/bin/pactl play-sample volume_blip; exec /usr/bin/killall -USR1 i3status
 bindsym XF86AudioRaiseVolume exec /usr/bin/pactl set-sink-volume 0 +20%; exec /usr/bin/pactl play-sample volume_blip; exec /usr/bin/killall -USR1 i3status
@@ -219,7 +214,6 @@ bindsym XF86Mail exec /usr/bin/xdg-email; workspace 5
 #bindsym XF86Favourites echo DOESNOTWORK
 #bindsym XF86Calculator exec /usr/bin/xcalc
 bindsym XF86Calculator exec /usr/bin/xbacklight -set 100
-# FLock keys
 #bindsym Help
 #bindsym Undo
 #bindsym Redo
@@ -230,7 +224,8 @@ bindsym XF86Calculator exec /usr/bin/xbacklight -set 100
 #bindsym XF86MailForward
 #bindsym XF86Send
 #bindsym XF86Save
-#bindsym Print
+bindsym Print exec scrot -bs '/tmp/_SCREEN_%Y-%m-%d-%T_$wx$h.png'
+bindsym $mod+Print exec scrot -b '/tmp/_SCREEN_FULL_%Y-%m-%d-%T_$wx$h.png'
 
 # $mod+n reserved for close all notifications
 # see ~/.config/dunst/dunstrc for more
@@ -238,23 +233,21 @@ bindsym XF86Calculator exec /usr/bin/xbacklight -set 100
 # one bar on both screens
 bar {
   position top
-#  mode hide
-#  modifier $mod
   status_command i3status
-  tray_output LVDS1
+  tray_output DisplayPort-0
 }
 
 # workspace screens
-workspace 1 output DP1
-workspace 2 output DP1
-workspace 3 output DP1
-workspace 4 output DP1
-workspace 5 output DP1
-workspace 6 output LVDS1
-workspace 7 output LVDS1
-workspace 8 output LVDS1
-workspace 9 output LVDS1
-workspace 10 output LVDS1
+workspace 1 output DisplayPort-0
+workspace 2 output DisplayPort-0
+workspace 3 output DisplayPort-0
+workspace 4 output DisplayPort-0
+workspace 5 output DisplayPort-0
+workspace 6 output DVI-0
+workspace 7 output DVI-0
+workspace 8 output DVI-0
+workspace 9 output DVI-0
+workspace 10 output DVI-0
 
 # workspace assignment (use "xprop")
 assign [class="^Google-chrome$"] 5
@@ -273,10 +266,11 @@ assign [class="^Sflphone$"] 10
 
 # custom window settings
 for_window [class="^XCalc$"] floating enable
-for_window [class="^URxvt$" instance="scratchpad"] border 1pixel; move scratchpad
-for_window [class="Google-chrome$"] border 1pixel
+for_window [class="^Zeal$" instance="scratchpad"] move scratchpad
+for_window [class="^google-chrome$"] border 1pixel
 for_window [title="Lingea Lexicon 5$"] border none
 for_window [class="^GVim$"] split v, layout stacking
+for_window [class="^Zeal$"] floating enable
 for_window [class="^Xsane$"] floating enable
 for_window [class="^SFLphone"] floating enable
 for_window [class="^TeamViewer.exe$"] floating enable
@@ -295,16 +289,8 @@ for_window [class="^Workrave$"] floating enable
 for_window [class="^History buffer$"] border none; fullscreen
 for_window [title="^Google+ Hangouts is sharing your screen"] floating enable
 
-# get elluminate working
-for_window [title="^Elluminate Live!"] floating enable
-for_window [title="^Application Sharing"] floating enable
-for_window [class="^net-sourceforge-jnlp-runtime-Boot$" title="^Downloading"] floating enable
-for_window [class="^net-sourceforge-jnlp-runtime-Boot$" title="^win0"] floating enable; move position 0 0
-for_window [title="^Java$"] floating enable
-#for_window [class="^love$"] floating enable
-
 # create scratchpad shell
-#exec urxvt256c -name scratchpad -e bash
+#exec -name scratchpad zeal
 
 # start the session
 exec --no-startup-id ~/.i3/autostart
