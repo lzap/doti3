@@ -28,8 +28,8 @@ wait_for_program () {
 }
 
 ## Configure panel from left side
-PRIM_OUT=DisplayPort-0
-SEC_OUT=DVI-0
+PRIM_OUT=DP-1
+SEC_OUT=DVI-D-1
 xrandr --output $SEC_OUT --mode 1280x1024 --right-of $PRIM_OUT --output $PRIM_OUT --mode 2560x1440
 
 ## Merge Xresources

@@ -234,20 +234,20 @@ bindsym $mod+Print exec scrot -b '/tmp/_SCREEN_FULL_%Y-%m-%d-%T_$wx$h.png'
 bar {
   position top
   status_command i3status
-  tray_output DisplayPort-0
+  tray_output DP-1
 }
 
 # workspace screens
-workspace 1 output DisplayPort-0
-workspace 2 output DisplayPort-0
-workspace 3 output DisplayPort-0
-workspace 4 output DisplayPort-0
-workspace 5 output DisplayPort-0
-workspace 6 output DVI-0
-workspace 7 output DVI-0
-workspace 8 output DVI-0
-workspace 9 output DVI-0
-workspace 10 output DVI-0
+workspace 1 output DP-1
+workspace 2 output DP-1
+workspace 3 output DP-1
+workspace 4 output DP-1
+workspace 5 output DP-1
+workspace 6 output DVI-D-1
+workspace 7 output DVI-D-1
+workspace 8 output DVI-D-1
+workspace 9 output DVI-D-1
+workspace 10 output DVI-D-1
 
 # workspace assignment (use "xprop")
 assign [class="^Google-chrome$"] 5
@@ -267,7 +267,7 @@ assign [class="^Sflphone$"] 10
 # custom window settings
 for_window [class="^XCalc$"] floating enable
 for_window [class="^Zeal$" instance="scratchpad"] move scratchpad
-for_window [class="^google-chrome$"] border 1pixel
+for_window [class="^Google-chrome$"] border 1pixel
 for_window [title="Lingea Lexicon 5$"] border none
 for_window [class="^GVim$"] split v, layout stacking
 for_window [class="^Zeal$"] floating enable
