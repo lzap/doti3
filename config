@@ -27,8 +27,9 @@ bindsym $mod+Return exec xterm
 # kill focused window
 bindsym $mod+Shift+Q kill
 
-# start dmenu (program launcher)
-bindsym $mod+space exec /home/lzap/work/xlunch/xlunch -r -f /usr/share/fonts/google-roboto/RobotoCondensed-Regular.ttf/10
+# start program launcher
+# ln -s /usr/share/fonts/google-roboto/RobotoCondensed-Regular.ttf ~/.fonts
+bindsym $mod+space exec /home/lzap/work/xlunch/xlunch -i /home/lzap/.config/xlunch/entries.dsv -f RobotoCondensed-Regular.ttf/10 -G
 #bindsym $mod+space exec /home/lzap/bin/dmenu_run
 
 # reload/restart/exit (confirmation does not work anymore)
@@ -253,9 +254,9 @@ workspace 10 output DVI-D-1
 assign [class="^Google-chrome$"] 5
 #assign [class="^URxvt$" instance="^mail$"] 4
 assign [class="^Xchat$"] 6
-assign [class="^quasselclient$"] 6
-assign [title="^Quassel IRC"] 6
 assign [title="^weechat"] 6
+assign [class="^quaternion"] 6
+assign [class="^[Hh]exchat"] 6
 assign [class="^Steam$"] 7
 assign [class="^Vide$"] 8
 #assign [class="^Decibel-audio-player.py$"] 7
@@ -267,6 +268,7 @@ assign [class="^Sflphone$"] 10
 # custom window settings
 for_window [class="^XCalc$"] floating enable
 for_window [class="^Zeal$" instance="scratchpad"] move scratchpad
+for_window [title="^Authy"] floating enable, border normal
 for_window [class="^Google-chrome$"] border 1pixel
 for_window [title="Lingea Lexicon 5$"] border none
 for_window [class="^GVim$"] split v, layout stacking

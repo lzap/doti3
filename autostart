@@ -27,11 +27,6 @@ wait_for_program () {
   done
 }
 
-## Configure panel from left side
-PRIM_OUT=DP-1
-SEC_OUT=DVI-D-1
-xrandr --output $SEC_OUT --mode 1280x1024 --right-of $PRIM_OUT --output $PRIM_OUT --mode 2560x1440
-
 ## Merge Xresources
 xrdb -merge ~/.Xresources &
 
@@ -72,8 +67,18 @@ xbacklight -set 100 &
 ## Mouse and trackball setup
 ~/bin/configure-input-devices >/dev/null 2>&1 &
 
+## Configure panel from left side
+PRIM_OUT=DP-1
+SEC_OUT=DVI-D-1
+xrandr --output $SEC_OUT --mode 1280x1024 --right-of $PRIM_OUT --output $PRIM_OUT --mode 2560x1440
+
 ## OSD
 LC_ALL=C dunst &
+
+## Sublime Text
+#i3-msg "workspace 1; move workspace to output $PRIM_OUT"
+#/opt/sublime_text/sublime_text &
+#wait_for_program
 
 ## Setup workspaces and terminals
 for w in 1 2 3 4; do
@@ -89,7 +94,7 @@ for w in 1 2 3 4; do
 done
 
 i3-msg workspace 5
-i3-msg layout tabbed
+#i3-msg layout tabbed
 ~/bin/chrome &
 
 for w in 6 7 8 9 10; do
@@ -98,7 +103,9 @@ done
 
 ## Start apps with defined workspaces
 i3-msg "workspace 6"
-$TERMINAL -e weechat-curses &
+#$TERMINAL -e weechat-curses &
+#flatpak run com.github.quaternion/x86_64/stable &>/dev/null &
+hexchat &>/dev/null &
 
 ## Refresh
 xrefresh &
@@ -109,11 +116,11 @@ sleep 4s && xmodmap /home/lzap/.Xmodmap &
 ## Start taskbar utils
 LC_ALL=C parcellite &>/dev/null &
 LC_ALL=C nm-applet &>/dev/null &
-LC_ALL=C workrave &>/dev/null &
+#LC_ALL=C workrave &>/dev/null &
 #LC_ALL=C dropbox start &>/dev/null &
 
 ## Update launcher cache
-bash /home/lzap/work/xlunch/extra/genconf > /home/lzap/.xlunch/icons.conf 2>/dev/null &
+bash /home/lzap/work/xlunch/extra/genentries -p /home/lzap/.local/share/icons > /home/lzap/.config/xlunch/entries.dsv 2>/dev/null &
 #dmenu_path >/dev/null &
 
 ## Good work :-)
